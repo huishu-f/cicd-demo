@@ -1,0 +1,19 @@
+calculator.js
+  s_ebc18c2f0e80fc::t_03fe2d2236ce67 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "e4d8e52ad0231fcaef7bd2bee8d502a370363c6f",
+  "prompts": {},
+  "sessions": {
+    "s_ebc18c2f0e80fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8411a9e4-be75-455b-8645-2d06fc6d0b1c",
+        "model": "glm-5.3"
+      },
+      "human_author": "卜二 <5442923+lhfp@user.noreply.gitee.com>"
+    }
+  }
+}
