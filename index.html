@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CI/CD Demo - 计算器</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "PingFang SC", sans-serif;
+      background: linear-gradient(135deg, #1e2a4a, #2d1b4e);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      width: 380px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    h1 { font-size: 22px; margin-bottom: 4px; }
+    .sub { font-size: 12px; opacity: 0.6; margin-bottom: 24px; }
+    .display {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: right;
+      font-size: 32px;
+      font-family: "SF Mono", Menlo, monospace;
+      margin-bottom: 16px;
+      min-height: 64px;
+      word-break: break-all;
+    }
+    .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      font-size: 18px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      transition: background 0.15s;
+    }
+    button:hover { background: rgba(255, 255, 255, 0.25); }
+    button.op { background: rgba(255, 159, 10, 0.7); }
+    button.op:hover { background: rgba(255, 159, 10, 0.9); }
+    button.eq { background: rgba(52, 199, 89, 0.8); }
+    button.eq:hover { background: rgba(52, 199, 89, 1); }
+    .badge {
+      margin-top: 20px;
+      font-size: 11px;
+      text-align: center;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🧮 计算器</h1>
+    <div class="sub">CI/CD Demo · 每次部署都经过自动化测试</div>
+    <div class="display" id="display">0</div>
+    <div class="keys">
+      <button onclick="clearAll()">AC</button>
+      <button onclick="press('/')">÷</button>
+      <button onclick="press('*')">×</button>
+      <button onclick="press('-')">−</button>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button onclick="press('+')" class="op">+</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button onclick="calc()" class="eq" rowspan="2">=</button>
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button onclick="backspace()">⌫</button>
+    </div>
+    <div class="badge">由 GitHub Actions 自动构建并部署到 GitHub Pages</div>
+  </div>
+
+  <script>
+    let expr = '';
+    const display = document.getElementById('display');
+
+    function refresh() {
+      display.textContent = expr || '0';
+    }
+
+    function press(c) {
+      if (/[+\-*/.]{2,}$/.test(expr + c) && /[+\-*/.]/.test(c)) return; // 防止连续运算符
+      expr += c;
+      refresh();
+    }
+
+    function calc() {
+      if (!expr) return;
+      try {
+        if (/[*/+-]\s*$/.test(expr)) expr = expr.slice(0, -1);
+        const result = eval(expr);
+        if (result === undefined || Number.isNaN(result)) throw new Error();
+        expr = String(result);
+        refresh();
+      } catch {
+        display.textContent = '错误';
+        expr = '';
+      }
+    }
+
+    function clearAll() {
+      expr = '';
+      refresh();
+    }
+
+    function backspace() {
+      expr = expr.slice(0, -1);
+      refresh();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+# CD（持续部署）：代码到 main 分支且测试通过后，自动发布到 GitHub Pages
+# 你不需要买服务器 —— GitHub 免费送你一个静态网站托管
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # 支持手动触发（在 GitHub 网页 Actions 标签页点按钮）
+  workflow_dispatch:
+
+# 权限声明：允许这个 workflow 写入 Pages 服务
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 并发控制：新部署来了，取消还在跑的旧部署（防止两条流水线同时写 Pages 打架）
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # 第一段：测试（CD 的前提 —— 测试不过就不许上线！）
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+
+  # 第二段：部署
+  deploy:
+    needs: test                    # 依赖关系：test 成功才轮到我
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}   # 部署完把网址回显到流水线页面
+    steps:
+      - uses: actions/checkout@v4
+
+      # 静态网站（index.html）不用编译，直接打包
+      - name: 组装发布目录
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上传网站产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

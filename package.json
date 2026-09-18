@@ -1,0 +1,8 @@
+{
+  "name": "cicd-demo",
+  "version": "1.0.0",
+  "description": "学习 CI/CD 的极简 demo：GitHub Actions 自动测试 + 自动部署到 GitHub Pages",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,35 @@
+# CI（持续集成）：每次 push 或 PR 自动跑测试
+# 名词解释：
+#   CI  = Continuous Integration（持续集成）：代码一提交，机器就自动帮你 build + 测试
+#   CD  = Continuous Deployment/Delivery（持续部署/交付）：测试通过后，机器自动发布上线
+#   workflow = 一条自动化流水线，文件放这个目录 GitHub 就会自动识别
+
+name: CI
+
+# 触发条件：什么时候执行这条流水线
+on:
+  push:
+    branches: [main]        # push 到 main 分支时执行
+  pull_request:             # 有人提 PR 时也执行
+
+jobs:
+  test:
+    # 跑在哪：GitHub 免费提供的虚拟机（Linux）
+    runs-on: ubuntu-latest
+
+    steps:
+      # 步骤 1：把你的代码下载到虚拟机上（checkout = 检出代码）
+      - uses: actions/checkout@v4
+
+      # 步骤 2：安装 Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 步骤 3：跑测试（package.json 里的 npm test → node --test）
+      # 任何一个测试失败 → 整个流水线红叉 ❌ → 告诉所有人"这代码有问题，不能合并"
+      - name: 运行自动化测试
+        run: npm test
+
+      - name: 测试全部通过的提示
+        run: echo "✅ 所有测试通过，代码可以安全发布"
