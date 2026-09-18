@@ -2,7 +2,7 @@
 // CI 中自动测试的主角就是它
 
 function add(a, b) {
-  return a - b;  // 手滑！把 + 写成了 -
+  return a + b;
 }
 
 function subtract(a, b) {
