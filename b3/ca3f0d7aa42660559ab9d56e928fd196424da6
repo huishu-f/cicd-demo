@@ -1,0 +1,19 @@
+index.html
+  s_6942149b269a8d::t_b1beb719eadb79 1-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b3ca3f0d7aa42660559ab9d56e928fd196424da6",
+  "prompts": {},
+  "sessions": {
+    "s_6942149b269a8d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "68d6d38c-d139-4add-8efb-178461b7970e",
+        "model": "glm-5.3"
+      },
+      "human_author": "卜二 <5442923+lhfp@user.noreply.gitee.com>"
+    }
+  }
+}
